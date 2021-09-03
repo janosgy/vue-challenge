@@ -11,6 +11,10 @@ export type PriceComponent = {
   isProtected: boolean;
 };
 
+export type PriceComponentChange = {
+  [k in keyof PriceComponent]: PriceComponent[k];
+};
+
 export default createStore<State>({
   state: {
     priceComponents: [
@@ -34,11 +38,31 @@ export default createStore<State>({
         value,
       });
     },
-    REMOVE_PRICE_COMPONENT(state, { id }: { id: number }) {
+    REMOVE_PRICE_COMPONENT(state: State, { id }: { id: number }) {
       state.priceComponents = state.priceComponents.filter(
         (priceComponent) =>
           priceComponent.id !== id || priceComponent.isProtected
       );
+    },
+    UPDATE_PRICE_COMPONENT(
+      state: State,
+      {
+        id,
+        changes,
+      }: {
+        id: number;
+        changes: PriceComponentChange;
+      }
+    ) {
+      state.priceComponents = state.priceComponents.map((priceComponent) => {
+        if (priceComponent.id === id) {
+          return {
+            ...priceComponent,
+            ...changes,
+          };
+        }
+        return priceComponent;
+      });
     },
   },
   getters: {

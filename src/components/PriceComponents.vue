@@ -7,6 +7,7 @@
       :value="priceComponent.value"
       :is-protected="priceComponent.isProtected"
       @on-delete="onDelete(priceComponent.id)"
+      @on-change="onChange(priceComponent.id, $event)"
     />
   </div>
 </template>
@@ -15,7 +16,7 @@
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 
-import { State } from "@/store";
+import { PriceComponentChange, State } from "@/store";
 import PriceComponent from "@/components/PriceComponent.vue";
 
 export default defineComponent({
@@ -29,6 +30,8 @@ export default defineComponent({
         () => store.state.priceComponents
       ),
       onDelete: (id: number) => store.commit("REMOVE_PRICE_COMPONENT", { id }),
+      onChange: (id: number, payload: PriceComponentChange) =>
+        store.commit("UPDATE_PRICE_COMPONENT", { id, changes: payload }),
     };
   },
 });

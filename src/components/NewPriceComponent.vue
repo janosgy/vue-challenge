@@ -14,6 +14,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useStore } from "vuex";
+import { isValid } from "@/util/valueValidator";
 
 const initialLabel = "";
 const initialValue = null;
@@ -27,11 +28,7 @@ export default defineComponent({
     const value = ref(initialValue);
 
     const onSubmit = () => {
-      if (
-        !label.value.length ||
-        value.value === "" ||
-        (value.value ?? -1) < 0
-      ) {
+      if (!label.value.length || !isValid(value.value)) {
         console.warn(`Invalid form data: ${label.value}, ${value.value}`);
         return;
       }

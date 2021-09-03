@@ -1,20 +1,22 @@
 <template>
   <div class="priceComponent">
-    <input type="text" :value="label" placeholder="Label" />
+    <input type="text" v-model.trim="updatedLabel" placeholder="Label" />
+
     <button class="btn btn-edit" type="button" v-if="!isProtected">\</button>
 
     <input
       type="number"
-      :value="value"
+      v-model.number="updatedValue"
       placeholder="value"
       min="0"
-      @blur="onSubmit()"
+      @change="onValueChange()"
     />
+
     <button
       class="btn btn-delete"
       type="button"
       v-if="!isProtected"
-      @click="$emit('onDelete')"
+      @click="$emit('on-delete')"
     >
       X
     </button>
@@ -22,7 +24,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { isValid } from "@/util/valueValidator";
 
 export default defineComponent({
   name: "PriceComponent",
@@ -39,7 +42,22 @@ export default defineComponent({
       type: Boolean,
     },
   },
-  emits: ["on-delete"],
+  emits: ["on-delete", "on-change"],
+  setup(props, { emit }) {
+    const updatedValue = ref(props.value);
+    const updatedLabel = ref(props.label);
+
+    return {
+      updatedValue,
+      updatedLabel,
+      onValueChange: () => {
+        if (!isValid(updatedValue.value)) {
+          updatedValue.value = 0;
+        }
+        emit("on-change", { value: updatedValue.value });
+      },
+    };
+  },
 });
 </script>
 
