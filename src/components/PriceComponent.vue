@@ -1,31 +1,48 @@
 <template>
-  <div class="priceComponent">
-    <input type="text" v-model.trim="updatedLabel" placeholder="Label" />
+  <div
+    class="priceComponent row row-between"
+    @mouseenter="setHovered(true)"
+    @mouseleave="setHovered(false)"
+  >
+    <div class="col">
+      <input type="text" v-model.trim="updatedLabel" placeholder="Label" />
+    </div>
+    <div class="col">
+      <button class="btn" type="button" v-if="!isProtected" v-show="isHovered">
+        \
+      </button>
+    </div>
 
-    <button class="btn btn-edit" type="button" v-if="!isProtected">\</button>
+    <div class="col">
+      <input
+        class="valueInput"
+        v-model.number="updatedValue"
+        placeholder="value"
+        min="0"
+        @focus="unformatValue()"
+        @blur="formatValue()"
+        @change="onValueChange()"
+      />
+    </div>
 
-    <input
-      type="number"
-      v-model.number="updatedValue"
-      placeholder="value"
-      min="0"
-      @change="onValueChange()"
-    />
-
-    <button
-      class="btn btn-delete"
-      type="button"
-      v-if="!isProtected"
-      @click="$emit('on-delete')"
-    >
-      X
-    </button>
+    <div class="delete-wrapper">
+      <button
+        class="btn"
+        type="button"
+        v-if="!isProtected"
+        v-show="isHovered"
+        @click="$emit('on-delete')"
+      >
+        X
+      </button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { isValid } from "@/util/valueValidator";
+import { formatPrice } from "@/util/formatPrice";
 
 export default defineComponent({
   name: "PriceComponent",
@@ -44,18 +61,29 @@ export default defineComponent({
   },
   emits: ["on-delete", "on-change"],
   setup(props, { emit }) {
-    const updatedValue = ref(props.value);
+    const updatedValue = ref(props.value.toString());
     const updatedLabel = ref(props.label);
+    const isHovered = ref(false);
+
+    const formatValue = () => (updatedValue.value = formatPrice(props.value));
+    const unformatValue = () => (updatedValue.value = props.value.toString());
+
+    onMounted(formatValue);
 
     return {
       updatedValue,
       updatedLabel,
       onValueChange: () => {
-        if (!isValid(updatedValue.value)) {
-          updatedValue.value = 0;
+        let newVal = parseFloat(updatedValue.value);
+        if (!isValid(newVal)) {
+          newVal = 0;
         }
-        emit("on-change", { value: updatedValue.value });
+        emit("on-change", { value: newVal });
       },
+      setHovered: (newVal: boolean) => (isHovered.value = newVal),
+      formatValue,
+      unformatValue,
+      isHovered,
     };
   },
 });
@@ -63,12 +91,15 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .priceComponent {
-  .btn {
-    display: none;
-  }
+  position: relative;
+}
 
-  &:hover .btn {
-    display: unset;
-  }
+.valueInput {
+  text-align: right;
+}
+
+.delete-wrapper {
+  position: absolute;
+  right: -30px;
 }
 </style>

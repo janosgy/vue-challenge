@@ -1,13 +1,21 @@
 <template>
-  <div>
-    <input type="text" v-model.trim="label" placeholder="Label" />
-    <input
-      type="number"
-      v-model.number="value"
-      placeholder="value"
-      min="0"
-      @blur="onSubmit()"
-    />
+  <div class="row row-between">
+    <div class="col">
+      <input
+        type="text"
+        :class="{ invalid: !labelValid }"
+        v-model.trim="label"
+        placeholder="Label"
+      />
+    </div>
+    <div class="col">
+      <input
+        v-model.number="value"
+        :class="{ invalid: !valueValid }"
+        placeholder="value"
+        @blur="onSubmit()"
+      />
+    </div>
   </div>
 </template>
 
@@ -25,10 +33,15 @@ export default defineComponent({
     const store = useStore();
 
     const label = ref(initialLabel);
+    const labelValid = ref(true);
     const value = ref(initialValue);
+    const valueValid = ref(true);
 
     const onSubmit = () => {
-      if (!label.value.length || !isValid(value.value)) {
+      labelValid.value = !!label.value.length;
+      valueValid.value = isValid(value.value);
+
+      if (!labelValid.value || !valueValid.value) {
         console.warn(`Invalid form data: ${label.value}, ${value.value}`);
         return;
       }
@@ -45,14 +58,20 @@ export default defineComponent({
     return {
       onSubmit,
       label,
+      labelValid,
       value,
+      valueValid,
     };
   },
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 input {
   color: gray;
+
+  &.invalid {
+    border-color: red;
+  }
 }
 </style>

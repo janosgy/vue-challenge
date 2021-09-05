@@ -1,10 +1,12 @@
 <template>
-  <div>
+  <fieldset class="cost">
+    <legend>Price Components</legend>
+
     <TotalCost />
     <PriceComponents />
 
     <NewPriceComponent />
-  </div>
+  </fieldset>
 </template>
 
 <script lang="ts">
@@ -18,3 +20,11 @@ export default defineComponent({
   components: { TotalCost, NewPriceComponent, PriceComponents },
 });
 </script>
+
+<style lang="scss" scoped>
+.cost {
+  width: 50%;
+  max-width: 500px;
+  padding: 40px 70px 40px 40px;
+}
+</style>

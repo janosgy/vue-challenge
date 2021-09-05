@@ -7,20 +7,19 @@
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+.row {
+  display: flex;
+  flex-flow: row wrap;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  &-between {
+    justify-content: space-between;
+  }
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  &-center {
+    justify-content: center;
   }
 }
 </style>

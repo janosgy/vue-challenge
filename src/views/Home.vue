@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="row row-center">
     <Cost />
   </div>
 </template>
