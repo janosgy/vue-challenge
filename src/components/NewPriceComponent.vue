@@ -1,21 +1,18 @@
 <template>
-  <div class="row row-between">
-    <div class="col">
+  <div class="row between-xs">
+    <div class="col-xs-4 col-xs-offset-1">
       <input
         type="text"
-        :class="{ invalid: !labelValid }"
         v-model.trim="label"
         placeholder="Label"
-      />
-    </div>
-    <div class="col">
-      <input
-        v-model.number="value"
-        :class="{ invalid: !valueValid }"
-        placeholder="value"
         @blur="onSubmit()"
       />
     </div>
+    <div class="col-xs-1"></div>
+    <div class="col-xs-3">
+      <input v-model.number="value" placeholder="value" @blur="onSubmit()" />
+    </div>
+    <div class="col-xs-1"></div>
   </div>
 </template>
 
@@ -33,15 +30,10 @@ export default defineComponent({
     const store = useStore();
 
     const label = ref(initialLabel);
-    const labelValid = ref(true);
     const value = ref(initialValue);
-    const valueValid = ref(true);
 
     const onSubmit = () => {
-      labelValid.value = !!label.value.length;
-      valueValid.value = isValid(value.value);
-
-      if (!labelValid.value || !valueValid.value) {
+      if (!label.value.length || !isValid(value.value)) {
         console.warn(`Invalid form data: ${label.value}, ${value.value}`);
         return;
       }
@@ -58,9 +50,7 @@ export default defineComponent({
     return {
       onSubmit,
       label,
-      labelValid,
       value,
-      valueValid,
     };
   },
 });
@@ -69,9 +59,5 @@ export default defineComponent({
 <style lang="scss" scoped>
 input {
   color: gray;
-
-  &.invalid {
-    border-color: red;
-  }
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
-  <div class="row">
-    <div class="col">Total: {{ total }} EUR/KG</div>
+  <div>
+    <div class="row end-xs">
+      <div class="col-xs-11">Total: {{ total }} EUR/KG</div>
+      <div class="col-xs-1"></div>
+    </div>
   </div>
 </template>
 
@@ -20,9 +23,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.row {
-  justify-content: flex-end;
-}
-</style>

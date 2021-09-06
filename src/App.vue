@@ -3,6 +3,8 @@
 </template>
 
 <style lang="scss">
+@import "~flexboxgrid2";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -10,16 +12,7 @@
   color: #2c3e50;
 }
 
-.row {
-  display: flex;
-  flex-flow: row wrap;
-
-  &-between {
-    justify-content: space-between;
-  }
-
-  &-center {
-    justify-content: center;
-  }
+input {
+  width: 100%;
 }
 </style>

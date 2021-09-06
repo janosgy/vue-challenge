@@ -23,8 +23,8 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .cost {
+  text-align: left;
   width: 50%;
   max-width: 500px;
-  padding: 40px 70px 40px 40px;
 }
 </style>

@@ -1,19 +1,33 @@
 <template>
   <div
-    class="priceComponent row row-between"
+    class="priceComponent row between-xs"
     @mouseenter="setHovered(true)"
     @mouseleave="setHovered(false)"
   >
-    <div class="col">
-      <input type="text" v-model.trim="updatedLabel" placeholder="Label" />
+    <div class="col-xs-4 col-xs-offset-1 label-wrapper">
+      <div v-if="!isEditing">{{ label }}</div>
+      <input
+        v-if="isEditing"
+        type="text"
+        v-model.trim="updatedLabel"
+        placeholder="Label"
+        @change="onLabelChange()"
+        @blur="toggleEditMode()"
+      />
     </div>
-    <div class="col">
-      <button class="btn" type="button" v-if="!isProtected" v-show="isHovered">
+    <div class="col-xs-1">
+      <button
+        class="btn"
+        type="button"
+        v-if="!isProtected"
+        v-show="isHovered"
+        @click="toggleEditMode()"
+      >
         \
       </button>
     </div>
 
-    <div class="col">
+    <div class="col-xs-3">
       <input
         class="valueInput"
         v-model.number="updatedValue"
@@ -25,7 +39,7 @@
       />
     </div>
 
-    <div class="delete-wrapper">
+    <div class="col-xs-1">
       <button
         class="btn"
         type="button"
@@ -64,6 +78,7 @@ export default defineComponent({
     const updatedValue = ref(props.value.toString());
     const updatedLabel = ref(props.label);
     const isHovered = ref(false);
+    const isEditing = ref(false);
 
     const formatValue = () => (updatedValue.value = formatPrice(props.value));
     const unformatValue = () => (updatedValue.value = props.value.toString());
@@ -80,10 +95,19 @@ export default defineComponent({
         }
         emit("on-change", { value: newVal });
       },
+      onLabelChange: () => {
+        if (!updatedLabel.value.length) {
+          updatedLabel.value = props.label; //reset label
+          return;
+        }
+        emit("on-change", { label: updatedLabel.value });
+      },
       setHovered: (newVal: boolean) => (isHovered.value = newVal),
+      toggleEditMode: () => (isEditing.value = !isEditing.value),
       formatValue,
       unformatValue,
       isHovered,
+      isEditing,
     };
   },
 });
@@ -92,14 +116,14 @@ export default defineComponent({
 <style lang="scss" scoped>
 .priceComponent {
   position: relative;
+  margin-bottom: 5px;
+}
+
+.label-wrapper {
+  overflow: hidden;
 }
 
 .valueInput {
   text-align: right;
-}
-
-.delete-wrapper {
-  position: absolute;
-  right: -30px;
 }
 </style>
